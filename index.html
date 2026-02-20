@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Vrai ou Faux — Mérignac</title>
+<meta name="description" content="6 affirmations sur Mérignac. Swipe pour deviner. Les réponses vont te surprendre.">
+<meta property="og:title" content="Vrai ou Faux — Mérignac">
+<meta property="og:description" content="6 affirmations choc sur ta ville. Tu valides ou pas ?">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://quiz.merignac-ville-durable.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#000091;--blue-deep:#040452;--yellow:#FFFF00;--yellow-soft:#FFF84D;--bg:#080840;--card-bg:#0c0c5a;--white:#fff;--gray:#a0a0cc;--success:#22c55e;--error:#ef4444;--orange:#f59e0b}
+html{font-size:16px;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(160deg,#000091 0%,#060673 40%,#040452 100%);background-attachment:fixed;color:var(--white);min-height:100dvh;overflow-x:hidden;position:relative;-webkit-user-select:none;user-select:none}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,0,180,0.2) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(255,255,0,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+.screen{display:none;flex-direction:column;align-items:center;padding:24px 20px;flex:1}.screen.active{display:flex}
+.intro{justify-content:center;text-align:center;gap:28px}
+.intro .eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);font-weight:700;opacity:0.8}
+.intro h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,12vw,64px);line-height:0.95;letter-spacing:-1px}
+.intro h1 em{color:var(--yellow);font-style:normal}
+.intro .desc{font-size:15px;line-height:1.6;color:var(--gray);max-width:340px}.intro .desc b{color:var(--white);font-weight:700}
+.intro .how{display:flex;gap:24px;justify-content:center}.intro .how .hw{text-align:center;max-width:120px}
+.intro .how .hw .hw-icon{font-size:28px;margin-bottom:6px}.intro .how .hw span{font-size:11px;color:var(--gray);line-height:1.4;display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;border:none;cursor:pointer;transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.btn-primary{background:var(--yellow);color:var(--blue-deep);box-shadow:0 0 40px rgba(255,255,0,0.2)}.btn-primary:hover{transform:scale(1.04);box-shadow:0 0 60px rgba(255,255,0,0.35)}.btn-primary:active{transform:scale(0.97)}
+.btn-secondary{background:rgba(255,255,255,0.08);color:var(--white);border:1px solid rgba(255,255,255,0.15)}
+.story-bar{position:sticky;top:0;z-index:10;padding:16px 20px 12px;background:linear-gradient(180deg,#000091 60%,transparent);display:flex;gap:4px}
+.story-pip{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,0.12);overflow:hidden}.story-pip .pip-fill{height:100%;width:0%;background:var(--yellow);border-radius:3px;transition:width 0.4s ease}
+.story-pip.done .pip-fill{width:100%}.story-pip.active .pip-fill{width:100%}
+.stack-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 20px 24px;position:relative;overflow:hidden}
+.statement-card{width:100%;max-width:440px;border-radius:5px;padding:32px 24px;background:linear-gradient(145deg,rgba(0,0,120,0.9),rgba(4,4,72,0.95));border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 60px rgba(0,0,0,0.4);position:relative;touch-action:pan-y;transition:transform 0.1s ease,opacity 0.1s ease}
+.statement-card.exit-left{transform:translateX(-120%) rotate(-15deg)!important;opacity:0!important;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease!important}
+.statement-card.exit-right{transform:translateX(120%) rotate(15deg)!important;opacity:0!important;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease!important}
+.card-theme{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--yellow);margin-bottom:20px;opacity:0.7}
+.card-theme .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.statement-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,8vw,38px);line-height:1.05;letter-spacing:-0.5px;min-height:120px}
+.drag-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;pointer-events:none;opacity:0;transition:opacity 0.15s;text-shadow:0 2px 20px rgba(0,0,0,0.5)}
+.drag-hint.vrai{color:var(--success);right:auto;left:24px;transform:translateY(-50%) rotate(-12deg)}.drag-hint.faux{color:var(--error);left:auto;right:24px;transform:translateY(-50%) rotate(12deg)}
+.answer-buttons{display:flex;gap:12px;width:100%;max-width:440px;margin-top:20px}
+.answer-btn{flex:1;padding:16px;border-radius:5px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;border:2px solid;cursor:pointer;transition:all 0.2s;background:transparent}
+.answer-btn.faux-btn{color:var(--error);border-color:rgba(239,68,68,0.3)}.answer-btn.faux-btn:hover{background:rgba(239,68,68,0.12);border-color:var(--error)}.answer-btn.faux-btn:active{transform:scale(0.95)}
+.answer-btn.vrai-btn{color:var(--success);border-color:rgba(34,197,94,0.3)}.answer-btn.vrai-btn:hover{background:rgba(34,197,94,0.12);border-color:var(--success)}.answer-btn.vrai-btn:active{transform:scale(0.95)}
+.reveal-overlay{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,20,0.92);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;padding:24px 20px}.reveal-overlay.open{display:flex}
+.reveal-card{max-width:440px;width:100%;border-radius:5px;padding:32px 24px;text-align:center;animation:fadeUp 0.4s cubic-bezier(0.4,0,0.2,1) both}
+.reveal-card.was-true{background:linear-gradient(145deg,rgba(0,60,0,0.4),rgba(4,4,72,0.95));border:1px solid rgba(34,197,94,0.3)}
+.reveal-card.was-false{background:linear-gradient(145deg,rgba(60,0,0,0.3),rgba(4,4,72,0.95));border:1px solid rgba(239,68,68,0.3)}
+.reveal-verdict{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px;margin-bottom:8px}.reveal-verdict.true{color:var(--success)}.reveal-verdict.false{color:var(--error)}
+.reveal-stat{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--yellow);margin:12px 0 8px}
+.reveal-explain{font-size:14px;line-height:1.6;color:rgba(255,255,255,0.8);margin-bottom:6px}
+.reveal-source{font-size:11px;color:var(--gray);margin-bottom:20px}
+.reveal-proposal{text-align:left;padding:14px 16px;border-radius:5px;background:rgba(255,255,0,0.06);border-left:3px solid var(--yellow);margin-bottom:20px}
+.reveal-proposal .rp-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);font-weight:700;margin-bottom:6px;opacity:0.7}
+.reveal-proposal .rp-text{font-size:13px;line-height:1.5;color:rgba(255,255,255,0.85)}
+.reveal-result{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.reveal-result .badge{padding:4px 12px;border-radius:3px;font-size:12px;font-weight:700}
+.badge.correct{background:rgba(34,197,94,0.15);color:var(--success);border:1px solid rgba(34,197,94,0.3)}.badge.wrong{background:rgba(239,68,68,0.1);color:var(--error);border:1px solid rgba(239,68,68,0.3)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.result{justify-content:center;text-align:center;gap:24px}
+.result .score-ring{width:130px;height:130px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;position:relative}
+.result .score-ring::before{content:'';position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(var(--yellow) var(--pct),rgba(255,255,255,0.08) var(--pct));z-index:0;transition:background 1s ease}
+.result .score-ring::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#000091;z-index:1}
+.result .score-ring .sn{position:relative;z-index:2;font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--yellow);line-height:1}
+.result .score-ring .sl{position:relative;z-index:2;font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px}
+.result h2{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1.1}.result h2 em{color:var(--yellow);font-style:normal}
+.result .result-desc{font-size:14px;color:var(--gray);line-height:1.6;max-width:340px}
+.result .result-cta{padding:20px;border-radius:5px;background:linear-gradient(145deg,rgba(0,0,145,0.6),rgba(4,4,82,0.8));border:1px solid rgba(255,255,0,0.2);text-align:center;position:relative;overflow:hidden}
+.result .result-cta::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--yellow)}
+.result .result-cta .cta-name{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--yellow)}
+.result .result-cta .cta-list{font-size:13px;color:var(--white);margin-top:2px;font-weight:500}
+.result .result-cta .cta-rassemble{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--yellow);letter-spacing:2px;margin-top:6px}
+.result .result-cta .cta-alliance{font-size:11px;color:var(--gray);margin-top:4px}
+.result .result-cta .cta-link{display:inline-block;margin-top:12px;font-size:13px;color:var(--blue-deep);text-decoration:none;font-weight:700;background:var(--yellow);padding:10px 24px;border-radius:5px}
+.share-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.share-row .btn{padding:12px 20px;font-size:13px;border-radius:5px}
+.btn-whatsapp{background:#25D366;color:#fff;text-decoration:none;box-shadow:0 0 20px rgba(37,211,102,0.2)}.btn-whatsapp:hover{box-shadow:0 0 30px rgba(37,211,102,0.35);transform:scale(1.03)}.btn-whatsapp svg{width:20px;height:20px;fill:#fff;flex-shrink:0}
+.fade-in{animation:fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) both}.fade-in-d1{animation-delay:0.1s}.fade-in-d2{animation-delay:0.2s}.fade-in-d3{animation-delay:0.3s}.fade-in-d4{animation-delay:0.4s}
+@media(max-width:400px){.statement-card{padding:24px 18px}.statement-text{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="screen intro active" id="screen-intro">
+    <div class="eyebrow fade-in">Mérignac en 6 affirmations</div>
+    <h1 class="fade-in fade-in-d1"><em>Vrai</em><br>ou<br><em>Faux</em> ?</h1>
+    <p class="desc fade-in fade-in-d2"><b>6 affirmations choc</b> sur ta ville.<br>Tu valides… ou pas ? Les réponses vont te surprendre.</p>
+    <div class="how fade-in fade-in-d3">
+      <div class="hw"><div class="hw-icon">👈</div><span>Swipe gauche<br><b style="color:var(--error)">FAUX</b></span></div>
+      <div class="hw"><div class="hw-icon">👉</div><span>Swipe droite<br><b style="color:var(--success)">VRAI</b></span></div>
+    </div>
+    <button class="btn btn-primary fade-in fade-in-d4" onclick="startGame()">C'est parti →</button>
+    <div class="fade-in fade-in-d4" style="font-size:11px;color:var(--gray);opacity:0.5">6 cartes · 1 min</div>
+  </div>
+
+  <div class="screen" id="screen-game">
+    <div class="story-bar" id="story-bar"></div>
+    <div class="stack-area">
+      <div class="statement-card" id="card">
+        <div class="card-theme"><span class="dot"></span><span id="c-theme"></span></div>
+        <div class="statement-text" id="c-text"></div>
+        <div class="drag-hint vrai" id="hint-vrai">VRAI</div>
+        <div class="drag-hint faux" id="hint-faux">FAUX</div>
+      </div>
+      <div class="answer-buttons">
+        <button class="answer-btn faux-btn" onclick="answer(false)">✗ Faux</button>
+        <button class="answer-btn vrai-btn" onclick="answer(true)">✓ Vrai</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal-overlay" id="reveal">
+    <div class="reveal-card" id="reveal-card">
+      <div class="reveal-result" id="reveal-result"></div>
+      <div class="reveal-verdict" id="reveal-verdict"></div>
+      <div class="reveal-stat" id="reveal-stat"></div>
+      <div class="reveal-explain" id="reveal-explain"></div>
+      <div class="reveal-source" id="reveal-source"></div>
+      <div class="reveal-proposal"><div class="rp-label">Notre proposition</div><div class="rp-text" id="reveal-prop-text"></div></div>
+      <button class="btn btn-primary" style="width:100%" id="reveal-next" onclick="nextCard()">Suivante →</button>
+    </div>
+  </div>
+
+  <div class="screen result" id="screen-result">
+    <div class="score-ring" id="score-ring" style="--pct:0%"><span class="sn" id="final-score">0</span><span class="sl">/ 6</span></div>
+    <h2 id="result-title"></h2>
+    <p class="result-desc" id="result-desc"></p>
+    <div class="result-cta">
+      <div class="cta-name">THIERRY MILLET</div>
+      <div class="cta-list">Candidat à la mairie de Mérignac</div>
+      <div class="cta-rassemble">MÉRIGNAC NOUS RASSEMBLE</div>
+      <div class="cta-alliance">Liste d'union · Société civile · Droite &amp; Centre</div>
+      <a class="cta-link" href="https://merignac-ville-durable.com" target="_blank">Découvrir le programme →</a>
+    </div>
+    <div class="share-row">
+      <button class="btn btn-primary" id="btn-share" onclick="shareResult()">Partager</button>
+      <button class="btn btn-secondary" onclick="restart()">Rejouer</button>
+    </div>
+    <a class="btn btn-whatsapp" href="https://wa.me/33620350289?text=Bonjour%20!%20Je%20viens%20de%20faire%20le%20Vrai%20ou%20Faux%20sur%20M%C3%A9rignac%20et%20j%27aimerais%20en%20savoir%20plus." target="_blank" rel="noopener" style="width:100%;max-width:340px;padding:14px 24px;font-size:15px">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.554 4.123 1.526 5.857L.058 23.7a.5.5 0 00.612.612l5.843-1.468A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.82c-1.964 0-3.836-.53-5.469-1.533l-.392-.234-3.466.871.914-3.34-.256-.406A9.803 9.803 0 012.18 12c0-5.422 4.398-9.82 9.82-9.82 5.422 0 9.82 4.398 9.82 9.82 0 5.422-4.398 9.82-9.82 9.82z"/></svg>
+      Contacter Thierry Millet
+    </a>
+  </div>
+</div>
+<script>
+const STATEMENTS = [
+  {
+    theme:"Fiscalité",
+    text:"La taxe foncière a augmenté d'environ 50 % en 10 ans à Mérignac.",
+    isTrue:false,
+    stat:"+98 %, pas 50 %",
+    explain:"C'est presque le double ! Une propriétaire proche du Pin Galant payait 519 € en 2014. En 2024, c'est 1 030 €. Sur la même période, l'inflation n'a été que de 19,3 %.",
+    source:"Avis d'impôts locaux — Témoignage habitante",
+    proposal:"Audit approfondi de la gestion dès le début du mandat, objectif de stabilisation de la fiscalité locale, gestion sobre recherchant l'efficacité de chaque euro dépensé."
+  },
+  {
+    theme:"Assainissement",
+    text:"À Capeyron, lors des orages, 250 propriétés sont envahies par les eaux usées.",
+    isTrue:true,
+    stat:"250 maisons touchées",
+    explain:"Les canalisations de tout-à-l'égout datent du siècle dernier. Insuffisantes pour la charge des nouveaux immeubles. La ville est passée de 57 000 à 80 898 habitants sans investir dans ces infrastructures.",
+    source:"Témoignage Philippe Massol — Colistier",
+    proposal:"Engager avec la métropole un plan de mise aux normes du réseau d'assainissement, à la hauteur de la croissance démographique."
+  },
+  {
+    theme:"Sécurité",
+    text:"La majorité des Mérignacais estime que sa sécurité et celle de ses biens sont assurées.",
+    isTrue:false,
+    stat:"Seul 1 sur 5 se sent en sécurité",
+    explain:"80 % des habitants estiment que leur sécurité n'est pas assurée. La ville ne compte qu'un seul maître-chien et les rues sont plongées dans le noir la nuit.",
+    source:"Questionnaire citoyen — 1 630 réponses",
+    proposal:"Passer d'un maître-chien à une brigade cynophile, rétablir l'éclairage nocturne avec détecteurs de présence, intégrer l'IA à la vidéoprotection."
+  },
+  {
+    theme:"Urbanisme",
+    text:"La mairie qualifie de « forêt » ce qui n'est en réalité qu'un bosquet d'arbres.",
+    isTrue:true,
+    stat:"« Parc » = square, « Forêt » = bosquet",
+    explain:"L'opposition dénonce depuis 30 ans la propagande municipale sur les espaces verts. Le vote de Thierry Millet contre la 11ème modification du PLU a été rejoint, fait sans précédent, par des maires de la métropole.",
+    source:"Blog merignac-ville-durable.com — Vote PLU 2024",
+    proposal:"Réorienter le PLU pour un urbanisme plus humain, refondre la charte d'urbanisme en faveur d'un vrai cadre de vie vert, pas de communication."
+  },
+  {
+    theme:"Emploi & Logement",
+    text:"Mérignac compte plus de 60 000 emplois mais beaucoup de salariés ne trouvent pas à s'y loger.",
+    isTrue:true,
+    stat:"60 000 emplois, logement en tension",
+    explain:"Aéroport, Aéroparc, bases militaires… Mérignac est un bassin d'emploi majeur. Mais les salariés peinent à se loger sur place : trop de logements sociaux, pas assez pour les classes moyennes.",
+    source:"Témoignage Pierre Goguet — Président hon. CCI Bordeaux",
+    proposal:"Favoriser le logement pour ceux qui travaillent à Mérignac, rééquilibrer vers les classes moyennes (dispositifs PLS et PLI)."
+  },
+  {
+    theme:"Vie de quartier",
+    text:"Mérignac dispose de 10 agents de proximité pour créer du lien dans les quartiers.",
+    isTrue:false,
+    stat:"4 concierges seulement, pas 10",
+    explain:"Il n'y a que 4 concierges de quartier. Les habitants de Beutre disent être « les oubliés ». Les propositions faites en réunions de quartier sont très peu prises en compte par la mairie.",
+    source:"Témoignage Laurent Aviet — Colistier, Beutre",
+    proposal:"Remplacer les 4 concierges par 10 agents de proximité, créer une mairie mobile, instaurer « Un Quartier, un Élu » dédié à chaque secteur."
+  }
+];
+let current=0,score=0,startX=0,currentX=0,isDragging=false;
+function startGame(){document.getElementById('screen-intro').classList.remove('active');document.getElementById('screen-game').classList.add('active');buildPips();loadCard(0)}
+function buildPips(){const b=document.getElementById('story-bar');b.innerHTML='';STATEMENTS.forEach((_,i)=>{const p=document.createElement('div');p.className='story-pip';p.id='pip-'+i;p.innerHTML='<div class="pip-fill"></div>';b.appendChild(p)})}
+function loadCard(idx){current=idx;const s=STATEMENTS[idx],c=document.getElementById('card');document.getElementById('c-theme').textContent=s.theme;document.getElementById('c-text').textContent=s.text;c.className='statement-card';c.style.transform='';c.style.opacity='1';document.getElementById('hint-vrai').style.opacity='0';document.getElementById('hint-faux').style.opacity='0';STATEMENTS.forEach((_,i)=>{const p=document.getElementById('pip-'+i);p.className='story-pip'+(i<idx?' done':i===idx?' active':'');p.querySelector('.pip-fill').style.width=i<=idx?'100%':'0%'});c.style.opacity='0';c.style.transform='scale(0.95)';requestAnimationFrame(()=>{c.style.transition='opacity 0.3s,transform 0.3s';c.style.opacity='1';c.style.transform='scale(1)';setTimeout(()=>{c.style.transition=''},350)})}
+function answer(u){const s=STATEMENTS[current],c=document.getElementById('card'),ok=u===s.isTrue;if(ok)score++;c.classList.add(u?'exit-right':'exit-left');setTimeout(()=>showReveal(s,ok),300)}
+function showReveal(s,ok){const o=document.getElementById('reveal'),rc=document.getElementById('reveal-card');rc.className='reveal-card '+(s.isTrue?'was-true':'was-false');document.getElementById('reveal-result').innerHTML=ok?'<span class="badge correct">✓ Bien joué !</span>':'<span class="badge wrong">✗ Raté !</span>';const v=document.getElementById('reveal-verdict');v.textContent=s.isTrue?'C\'EST VRAI':'C\'EST FAUX';v.className='reveal-verdict '+(s.isTrue?'true':'false');document.getElementById('reveal-stat').textContent=s.stat;document.getElementById('reveal-explain').textContent=s.explain;document.getElementById('reveal-source').textContent=s.source;document.getElementById('reveal-prop-text').textContent=s.proposal;document.getElementById('reveal-next').textContent=current<STATEMENTS.length-1?'Suivante →':'Voir mon score →';o.classList.add('open')}
+function nextCard(){document.getElementById('reveal').classList.remove('open');if(current<STATEMENTS.length-1)loadCard(current+1);else showResult()}
+function showResult(){document.getElementById('screen-game').classList.remove('active');const r=document.getElementById('screen-result');r.classList.add('active');const p=Math.round(score/STATEMENTS.length*100);document.getElementById('final-score').textContent=score;setTimeout(()=>{document.getElementById('score-ring').style.setProperty('--pct',p+'%')},100);let t,d;if(score<=2){t="Ces réponses<br>t'ont <em>surpris</em> ?";d="Normal — ces réalités sont soigneusement cachées. Découvre le programme qui veut changer les choses."}else if(score<=4){t="Pas mal,<br>mais <em>Mérignac</em><br>réserve des surprises";d="Tu connais ta ville, mais certains faits t'ont échappé. Un programme existe pour y répondre."}else{t="<em>Bravo</em>,<br>rien ne t'échappe !";d="Tu maîtrises les réalités de Mérignac. Aide-nous à les faire connaître autour de toi."}document.getElementById('result-title').innerHTML=t;document.getElementById('result-desc').textContent=d}
+function shareResult(){const t=`J'ai eu ${score}/6 au Vrai ou Faux sur Mérignac 🏙️\nDes chiffres que la mairie préfère taire…\nFais le test 👉`,u=window.location.href;if(navigator.share)navigator.share({title:'Vrai ou Faux — Mérignac',text:t,url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(t+' '+u).then(()=>{const b=document.getElementById('btn-share');b.textContent='✓ Copié !';setTimeout(()=>{b.textContent='Partager'},2000)})}
+function restart(){score=0;document.getElementById('screen-result').classList.remove('active');document.getElementById('screen-game').classList.add('active');document.getElementById('score-ring').style.setProperty('--pct','0%');loadCard(0)}
+const card=document.getElementById('card');
+card.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;isDragging=true;card.style.transition='none'},{passive:true});
+card.addEventListener('touchmove',e=>{if(!isDragging)return;currentX=e.touches[0].clientX-startX;card.style.transform=`translateX(${currentX}px) rotate(${currentX*0.08}deg)`;const p=Math.min(Math.abs(currentX)/100,1);document.getElementById('hint-vrai').style.opacity=currentX>30?p:0;document.getElementById('hint-faux').style.opacity=currentX<-30?p:0},{passive:true});
+card.addEventListener('touchend',()=>{if(!isDragging)return;isDragging=false;if(currentX>80)answer(true);else if(currentX<-80)answer(false);else{card.style.transition='transform 0.3s ease';card.style.transform='';document.getElementById('hint-vrai').style.opacity='0';document.getElementById('hint-faux').style.opacity='0'}currentX=0});
+</script>
+</body>
+</html>
